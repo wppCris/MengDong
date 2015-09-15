@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:8000">
+    <title>用户管理</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/demo/demo.css">
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js"></script><!-- 使用该js组件可以使easyui的页码信息和提示信息变为中文 -->
+</head>
+<body>
+    <table id="dg" title="用户信息" class="easyui-datagrid" style="width:1147px;height:552px"
+            url="http://192.168.10.184:81/api/users/search"
+            toolbar="#toolbar" pagination="true"
+            rownumbers="true" fitColumns="true">
+        <thead>
+            <tr>
+            	<th field="ck" checkbox="true"></th>
+                <th field="userID" width="50">用户ID</th><!-- 添加 hidden="true" 可将此列隐藏 -->
+                <th field="userName" width="50">用户名称</th>
+                <th field="telNumber" width="50">电话</th>
+                <th field="email" width="50">邮箱</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新建用户</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑用户</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除用户</a>
+        <input id="userID" class="easyui-searchbox" style="line-height:26px;border:1px solid #ccc">
+        <a href="#" id="searchBtn" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+        <input id="import" type="text" class="easyui-filebox" data-options="prompt:'导入'">
+    </div>
+    
+    <!-- 新增用户对话框开始 -->
+    <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons">
+        <div class="ftitle">用户信息</div>
+        <form id="fm" method="post" novalidate>
+            <div class="fitem">
+                <label>用户ID:</label>
+                <input name="userID" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem">
+                <label>用户名称:</label>
+                <input name="userName" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem">
+                <label>电话:</label>
+                <input name="telNumber" class="easyui-textbox">
+            </div>
+            <div class="fitem">
+                <label>邮箱:</label>
+                <input name="email" class="easyui-textbox" validType="email">
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 新增用户对话框结束 -->
+    <!-- 编辑用户对话框开始 -->
+    <div id="dlg1" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons1">
+        <div class="ftitle1">用户信息</div>
+        <form id="fm1" method="post" novalidate>
+            <div class="fitem1">
+                <label>用户ID:</label>
+                <input id="id" name="userID" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem1">
+                <label>用户名称:</label>
+                <input id ="name" name="userName" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem1">
+                <label>电话:</label>
+                <input name="telNumber" class="easyui-textbox">
+            </div>
+            <div class="fitem1">
+                <label>邮箱:</label>
+                <input name="email" class="easyui-textbox" validType="email">
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveEditUser()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg1').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 编辑用户对话框结束 -->
+    <script type="text/javascript">
+        var url;
+        function newUser(){
+            $('#dlg').dialog('open').dialog('setTitle','新建用户');
+            $('#fm').form('clear');
+        }
+        function editUser(){
+            var row = $('#dg').datagrid('getSelected');
+                console.log(row);
+            if (row){
+                $('#dlg1').dialog('open').dialog('setTitle','编辑用户');
+                $('#fm1').form('load',row);
+            }
+        }
+        function saveUser(){
+            oData = {};
+            oData['userID'] = $("input[name = 'userID']").val();
+            oData['userName'] = $("input[name = 'userName']").val();
+            oData['createPersonID'] = 1;
+            oData['modifyPersonID'] = 1;
+
+            $.ajax({
+                url: 'http://localhost:8000/httpPost.php',
+                type: 'post',
+                data: oData
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+            $('#dlg').dialog('close');
+            $('#dg').datagrid('reload');
+        }
+
+        function saveEditUser(){
+            oData = {};
+            oData['userID'] = $("#id").val();
+            oData['userName'] = $("#name").val();
+            oData['createPersonID'] = 1;
+            oData['modifyPersonID'] = 1;
+
+            $.ajax({
+                url: 'http://localhost:8000/httpPut.php',
+                type: 'post',
+                data: oData
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+            $('#dlg1').dialog('close');
+            $('#dg').datagrid('reload');
+        }
+
+        function destroyUser(){
+            var rows = $('#dg').datagrid('getSelections');
+            if (rows.length == 0) {
+                $.messager.alert("提示","请选择要删除的行！","info");
+                return;
+            }
+            else {
+                $.messager.confirm('提示','你确定要删除选中的用户？',function(r){
+                    if (r){
+                        for (var i = rows.length - 1; i >= 0; i--) {
+                            var row = rows[i];
+                            if (row){
+                                oData = {};
+                                oData['userID'] = row.userID;
+
+                                $.ajax({
+                                 url: 'http://localhost:8000/httpDelete.php',
+                                 type: 'post',
+                                 data: oData
+                                })
+
+                                .done(function(data) {
+                                    console.log("success");
+                                    console.log(data);
+                                    $('#dg').datagrid('reload');
+                                })
+                                .fail(function() {
+                                    console.log("error");
+                                })
+                                .always(function() {
+                                    console.log("complete");
+                                });
+
+                            }
+                        }
+                    }
+                });
+            }
+            $('#dg').datagrid('reload');
+        }
+
+        function doSearch(){
+            url = 'http://192.168.10.184:81/api/users/'+$('#userID').val()
+			$('#dg').datagrid('load',url);
+		}
+
+		$('#dg').datagrid({
+				method:'get',
+                striped:true,
+                rownumbers:true,
+                pageNumber:1,
+                pageSize:5,
+                pageList:[5,10,15],
+                pagination:true
+            })
+    </script>
+    <style type="text/css">
+        #fm{
+            margin:0;
+            padding:10px 30px;
+        }
+        .ftitle{
+            font-size:14px;
+            font-weight:bold;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+        .fitem{
+            margin-bottom:5px;
+        }
+        .fitem label{
+            display:inline-block;
+            width:80px;
+        }
+        .fitem input{
+            width:160px;
+        }
+
+        #fm1{
+            margin:0;
+            padding:10px 30px;
+        }
+        .ftitle1{
+            font-size:14px;
+            font-weight:bold;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+        .fitem1{
+            margin-bottom:5px;
+        }
+        .fitem1 label{
+            display:inline-block;
+            width:80px;
+        }
+        .fitem1 input{
+            width:160px;
+        }
+    </style>
+</body>
+</html>

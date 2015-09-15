@@ -1,0 +1,365 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link href="../../dist/css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../../dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../../dist/css/bootstrap-responsive.css"/>
+  <link rel="stylesheet" type="text/css" href="../../dist/css/style.css"/>
+  <link rel="stylesheet" type="text/css" href="../../dist/css/easyui.css"/>
+  <link rel="stylesheet" type="text/css" href="../../dist/css/icon.css"/>
+  <link rel="stylesheet" type="text/css" href="../../dist/css/demo.css"/>
+  <link rel="stylesheet" type="text/css" href="../../assets/css/ace.min.css"/>
+
+  <script type="text/javascript" src="../../dist/js/jquery.min.js"></script>
+  <script type="text/javascript" src="../../dist/js/jquery.easyui.min.js"></script>
+  <script>
+    function del(id)
+    {
+      if(confirm("确定要删除吗？"))
+      {
+        var url = "index.html";
+        window.location.href=url;
+      }
+    }
+  </script>
+  <script type="text/javascript">
+    var current_tab = $('#frame_tabs').tabs('getSelected');
+    $('#frame_tabs').tabs('update',{
+     tab:current_tab,
+     options : {
+      content : '<iframe scrolling="auto" frameborder="0"  src="'+URL+'" style="width:100%;height:100%;"></iframe>',
+            //或者 href : '';
+          }
+        });
+  </script>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../../dist/js/jquery.js"></script>
+  <script type="text/javascript" src="../../dist/js/jquery.sorted.js"></script>
+  <script type="text/javascript" src="../../dist/js/ckform.js"></script>
+  <script type="text/javascript" src="../../dist/js/common.js"></script>
+  <style type="text/css">
+    .sidebar-nav {
+      padding: 9px 0;
+    }
+    @media (max-width: 980px) {
+      /* Enable use of floated navbar text */
+      .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+    .table th,
+    .table td {
+      padding: 8px;
+      line-height: 20px;
+      text-align: left;
+      vertical-align: top;
+      border-top: 1px solid #dddddd;
+    }
+  </style>
+</head>
+
+<body style="background-color:#fff; width:1147px; height:400px; padding: 0px;">
+
+  <form class="form-inline definewidth m20" action="index.html" method="get">
+    <div class="col-xs-12 col-sm-3">
+      <div class="input-group">
+        <input class="form-control search-query" type="text" placeholder="用户名">
+        <span class="input-group-btn btn-group">
+          <button class="btn btn-purple btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
+            搜索
+            <i class="glyphicon glyphicon-search icon-on-right bigger-110"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#">按名称查询</a></li>
+            <li><a href="#">按题目数量查询</a></li>
+            <li><a href="#">按题目类型查询</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">按创建人查询</a></li>
+          </ul>
+        </span>
+      </div>
+    </div>
+    <button type="button" class="btn btn-success btn-sm" id="addnew" data-toggle="modal" data-target="#addtest">新增试卷</button>&nbsp;&nbsp;
+    <div class="pull-right">
+      <button type="button" class="btn btn-info btn-sm" id="del">删除</button>&nbsp;&nbsp; 
+      <!-- <input type="file" name="file"/> -->
+      <button type="button" class="btn btn-primary btn-sm easyui-filebox" data-options="prompt:'Choose a file...'" id="import">导入</button>&nbsp;&nbsp; 
+      <button type="button" class="btn btn-warning btn-sm" id="export">导出</button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-striped table-hover definewidth m10" style="font-size:13px;">
+    <thead >
+      <tr>
+        <th><input type="checkbox">&nbsp;&nbsp;全选</th>
+        <th>试卷ID</th>
+        <th>名称</th>
+        <th>描述</th>
+        <th>题目数量</th>
+        <th>题目类型</th>
+        <th>创建人</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>1</td>
+      <td>配电测试卷1</td>
+      <td>该试卷用于初级考核。。。</td>
+      <td>30</td>
+      <td>配电，输电，变电</td>
+      <td>admin</td>
+      <td>2105-08-24 10:16</td>
+      <td>
+       <button type="button" class="btn btn-purple btn-minier" id="edit" data-toggle="modal" data-target="#edittest">编辑</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <button type="button" class="btn btn-grey btn-minier" id="del" data-toggle="modal" data-target="#delquestion">删除</button>
+     </td>
+   </tr>
+   
+</table>
+<div class="inline pull-right page">
+   <ul class="pagination">
+    <li class="disabled"><a href="#">«</a></li>
+    <li class="active"><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">»</a></li>
+  </ul>
+</div>
+<!-- <div class="easyui-panel" style="float:center;">
+  <div class="easyui-pagination" data-options="total:114"></div>
+</div> -->
+<!--新增试卷模态框开始-->
+<div class="modal fade" id="addtest" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+      &times;
+    </button>
+    <h4 class="modal-title" id="myModalLabel">
+     新增试卷信息
+   </h4>
+ </div>
+ <div class="modal-body">
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-1"> 试卷ID </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-1" placeholder="试卷ID" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 名称 </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-2" placeholder="名称" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 试卷描述 </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-2" placeholder="试卷描述" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 题目类型 </label>
+
+      <div class="col-sm-9">
+        <select id="cc" class="easyui-combotree" data-options="url:'tree_data1.json',method:'get'" multiple style="width:200px;"></select>
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 题目数量 </label>
+
+      <div class="col-sm-9">
+        <input class="easyui-numberspinner" value="30" style="width:80px;" data-options="
+        onChange: function(value){
+          $('#vv').text(value);
+        }
+      ">
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 创建人 </label>
+
+      <div class="col-sm-9">
+        <input type="password" id="form-field-2" placeholder="选项" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 创建时间 </label>
+
+      <div class="col-sm-9">
+        <input class="easyui-datetimebox" required style="width:200px">
+      </div>
+    </div>
+    <div class="space-4"></div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" 
+  data-dismiss="modal">关闭
+</button>
+<button type="button" class="btn btn-primary">
+ 提交更改
+</button>
+</div>
+</div>
+</div>
+</div>
+<!--新增试卷模态框结束-->
+<!--编辑试卷模态框开始-->
+<div class="modal fade" id="edittest" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+      &times;
+    </button>
+    <h4 class="modal-title" id="myModalLabel">
+     编辑试卷信息
+   </h4>
+ </div>
+ <div class="modal-body">
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-1"> 试卷ID </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-1" placeholder="试卷ID" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 名称 </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-2" placeholder="名称" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 试卷描述 </label>
+
+      <div class="col-sm-9">
+        <input type="text" id="form-field-2" placeholder="试卷描述" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 题目类型 </label>
+
+      <div class="col-sm-9">
+        <select id="cc" class="easyui-combotree" data-options="url:'tree_data1.json',method:'get'" multiple style="width:200px;"></select>
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 题目数量 </label>
+
+      <div class="col-sm-9">
+        <input class="easyui-numberspinner" style="width:80px;" data-options="
+        onChange: function(value){
+          $('#vv').text(value);
+        }
+      ">
+      </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 创建人 </label>
+
+      <div class="col-sm-9">
+        <input type="password" id="form-field-2" placeholder="选项" class="col-xs-10 col-sm-5" />
+      </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="form-field-2"> 创建时间 </label>
+
+      <div class="col-sm-9">
+        <input class="easyui-datetimebox" required style="width:200px">
+      </div>
+    </div>
+    <div class="space-4"></div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" 
+  data-dismiss="modal">关闭
+</button>
+<button type="button" class="btn btn-primary">
+ 提交更改
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- 编辑试卷模态框结束 -->
+
+<!-- 删除试卷模态框开始 -->
+<div class="modal fade" id="delquestion" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+      &times;
+    </button>
+    <h4 class="modal-title" id="myModalLabel">
+     删除用户
+   </h4>
+ </div>
+ <div class="modal-body">确定要删除吗？</div>
+ <div class="modal-footer">
+  <button type="button" class="btn btn-default" 
+  data-dismiss="modal">取消
+</button>
+<button type="button" class="btn btn-primary">
+  确定
+</button>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>

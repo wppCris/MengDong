@@ -1,0 +1,82 @@
+ .col-md-2{
+            margin-left: 0px;
+            margin-right: 0px;
+            padding-right: 0px;
+            padding-left: 0px;
+            background-color: #fff;
+            margin-top: 0px;
+        }
+        .col-md-10{
+            padding-right: 0px;
+            padding-left: 2px;
+            margin-top: 1px;
+            background-color: #fff;        }
+            .nav-tabs >li>a{
+                color: #000;
+                border: 1px solid #D5D5D5;
+                border-radius: 4px;
+                background-color: #e0ecff;
+                font-size: 15px;
+                padding-top: 10px;
+                padding-left: 30px;
+                
+                height: 40px;
+            }
+            .nav-tabs >li>a:hover{
+                color: #fff;
+                background-color: #438eb9;
+            }
+            .nav-tabs > li > a:focus {
+                color: #fff;
+                background-color: #438eb9;
+            }
+            .navbar-static-top {
+                background-color: #4A515B;
+                margin-bottom: 5px;
+            }
+            .navbar{
+                background-color: #66cdaa;
+                /* background-image: url('images/head_image.jpg'); */
+                height: 55px;
+            }
+            
+            .ace-nav>li{
+                height: 55px;
+            }
+            .navbar-brand {
+                /*background: url('images/logo.jpg') no-repeat 10px 8px;*/
+                padding-left: 60px;
+                display: inline-block;
+                vertical-align: middle;
+                color: #fff;
+                line-height: 20px;
+                font-size: 20px;
+            }
+            .navbar-default .navbar-brand {
+             color: #fff;
+         }
+         .navbar-brand:hover {
+            color: #fff;
+        }
+        
+        .collapsed .glyphicon-chevron-toggle, .glyphicon-chevron-toggle:before {
+            content: "\e113";
+        }
+        
+        .collapsed .glyphicon-chevron-toggle:before {
+            content: "\e114";
+        }
+        .ace-nav{
+            height: 45px;
+        }
+        .container-fluid{
+            background-color: #fff;
+        }
+        #footer {
+            margin-top: 5px;
+            text-align: center;
+            background-color: #fff;
+            color: #aaa;
+            font-style:14px;
+            overflow: hidden;
+        }

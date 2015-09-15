@@ -1,0 +1,287 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>蒙东移动培训后台管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./dist/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="./dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./dist/css/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./dist/css/icon.css">
+    <link rel="stylesheet" type="text/css" href="./dist/css/ace.min.css">
+    <link rel="stylesheet" type="text/css" href="./dist/css/font-awesome.min.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/sidebar/css/style.css" media="screen" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="./dist/css/index_style.css">
+</head>
+
+<body>
+    <div class="navbar navbar-default" id="navbar">
+        <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <a href="#" class="navbar-brand">
+                    蒙东移动培训后台管理系统
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+        <div style="text-align:left; float:left; margin-top:1px; background-color:#e8e8e8; color:#1f1f1f; padding-left: 20px; width:50%;">
+            欢迎光临！
+            <a href="#" class="easyui-menubutton" menu="#loginfo">Admin</a>
+        </div>
+        <div id="loginfo" style="width:150px;">
+            <div iconCls="icon-user">个人资料</div>
+            <div iconCls="icon-redo">修改密码</div>
+            <div class="menu-sep"></div>
+            <div iconCls="icon-off">退出</div>
+            <div>Select All</div>
+        </div>
+        <div id="time" style="text-align:right; float:right; margin-top:1px; background-color:#e8e8e8; color:purple;width:50%;">
+            <span><i class="glyphicon glyphicon-time"></i> </span>
+        </div>
+    </div>
+    <div class="row" style="margin-top:1px; width:1349px;">
+     <div id="sidebar" style="width:200px; height:620px; float:left;">
+        <ul id="accordion" class="accordion">
+            <li>
+                <div class="link">
+                    <a href="index.html">
+                        <i class="glyphicon glyphicon-home"></i>
+                        首页
+                    </a>
+                </div>
+            </li>
+            <li>
+                <div class="link"><i class="fa fa-paint-brush"></i>用户管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#" onclick="addTab('用户管理','Pages/User/index.html')">用户管理</a></li>
+                    <li><a href="#">角色管理</a></li>
+                    <li><a href="#">权限管理</a></li>
+                    <li><a href="#">修改密码</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="link"><i class="fa fa-code"></i>课程管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#">课程1</a></li>
+                    <li><a href="#">课程2</a></li>
+                    <li><a href="#">课程三</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="link"><i class="fa fa-mobile"></i>课件管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#">Tablets</a></li>
+                    <li><a href="#">Dispositivos mobiles</a></li>
+                    <li><a href="#">Medios de escritorio</a></li>
+                </ul>
+            </li>
+            <li><div class="link"><i class="fa fa-globe"></i>练习管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#">Google</a></li>
+                    <li><a href="#">Bing</a></li>
+                </ul>
+            </li>
+            <li><div class="link"><i class="fa fa-globe"></i>考试管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#" onclick="addTab('试题管理','Pages/Question/index.html')">试题管理</a></li>
+                    <li><a href="#" onclick="addTab('试卷管理','Pages/Test/index.html')">试卷管理</a></li>
+                </ul>
+            </li>
+            <li><div class="link"><i class="fa fa-globe"></i>学习管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#">Google</a></li>
+                    <li><a href="#">Bing</a></li>
+                </ul>
+            </li>
+            <li><div class="link"><i class="fa fa-globe"></i>练习管理<i class="fa fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#">Google</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+    <div id="content" style="width:1149px; height:552px; float:right;" >
+        <div id="tt" class="easyui-tabs">
+            <div title="Home">
+                <div id="dropzone" style="width:500px; padding:20px 10px 10px 20px; float:left;">
+                    <form action="//dummy.html" class="dropzone">
+                        <div class="fallback">
+                            <input name="file" type="file" multiple="" />
+                        </div>
+                    </form>
+                </div>
+                <div class="messagebox" style="width:500px; padding:20px 10px 10px 20px; float:right;"><!-- 上右下左 -->
+                    <div class="widget-box ">
+                        <div class="widget-header">
+                            <h4 class="lighter smaller">
+                                <i class="icon-comment blue"></i>
+                                会话
+                            </h4>
+                        </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main no-padding">
+                                <div class="dialogs">
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="Alexa's Avatar" src="assets/avatars/avatar1.png" />
+                                        </div>
+
+                                        <div class="body">
+                                            <div class="time">
+                                                <i class="icon-time"></i>
+                                                <span class="green">4秒钟前</span>
+                                            </div>
+
+                                            <div class="name">
+                                                <a href="#">wpp</a>
+                                            </div>
+                                            <div class="text">大家好啊</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="John's Avatar" src="assets/avatars/avatar.png" />
+                                        </div>
+
+                                        <div class="body">
+                                            <div class="time">
+                                                <i class="icon-time"></i>
+                                                <span class="blue">38秒以前</span>
+                                            </div>
+
+                                            <div class="name">
+                                                <a href="#">张三</a>
+                                            </div>
+                                            <div class="text">A02班级考试安排已经发出</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="Bob's Avatar" src="assets/avatars/user.jpg" />
+                                        </div>
+
+                                        <div class="body">
+                                            <div class="time">
+                                                <i class="icon-time"></i>
+                                                <span class="orange">2分钟以前</span>
+                                            </div>
+
+                                            <div class="name">
+                                                <a href="#">管理员</a>
+                                                <span class="label label-info arrowed arrowed-in-right">admin</span>
+                                            </div>
+                                            <div class="text">欢迎大家使用蒙东移动培训后台管理系统.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="Jim's Avatar" src="assets/avatars/avatar4.png" />
+                                        </div>
+
+                                        <div class="body">
+                                            <div class="time">
+                                                <i class="icon-time"></i>
+                                                <span class="grey">3分钟以前</span>
+                                            </div>
+
+                                            <div class="name">
+                                                <a href="#">学员1</a>
+                                            </div>
+                                            <div class="text">这个系统很好用</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="Alexa's Avatar" src="assets/avatars/avatar1.png" />
+                                        </div>
+
+                                        <div class="body">
+                                            <div class="time">
+                                                <i class="icon-time"></i>
+                                                <span class="green">4分钟以前</span>
+                                            </div>
+
+                                            <div class="name">
+                                                <a href="#">学员2</a>
+                                            </div>
+                                            <div class="text">继续学习啦</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemdiv dialogdiv">
+                                        <div class="user">
+                                            <img alt="Alexa's Avatar" src="assets/avatars/avatar1.png" />
+                                        </div>
+
+                                        <div class="body">
+
+                                            <div class="name">
+                                                <a href="#">wpp</a>
+                                            </div>
+                                            <div class="text"><input id="message" class="form-control" type="text" placeholder=""></div>
+                                            <div class="tools">
+                                                <a href="#" class="btn btn-minier btn-primary">发送
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div><!-- messagebox end -->
+            </div><!-- home end -->
+        </div><!-- easyuitabs end -->
+    </div><!-- content end -->
+</div>
+</div>
+<div id="footer">
+   版权所有&copy;2015 湖北 武汉 武汉楚翎软件技术有限公司 <br / >地址：武汉市光谷软件园A8栋5楼 邮编:430074  联系方式：027-XXXXXXX
+</div>
+
+<script src='./assets/sidebar/js/jquery.js'></script>
+<script src="./assets/sidebar/js/index.js"></script>
+<script src="./dist/js/bootstrap.min.js"></script>
+<script src="./dist/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./dist/js/jquery.easyui.min.js"></script>
+<script>
+    document.getElementById('time').innerHTML=new Date().toLocaleString();
+    setInterval("document.getElementById('time').innerHTML=new Date().toLocaleString();",1000);
+</script>
+<script>
+    function addTab(title, url){
+        if ($('#tt').tabs('exists', title)){
+            $('#tt').tabs('select', title);
+            var tab = tt.tabs('getSelected');
+            var frame = tab.find('iframe')[0];
+            frame.contentWindow.location.reload();
+
+        } else {
+            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+            $('#tt').tabs('add',{
+                title:title,
+                content:content,
+                closable:true
+            });
+        }
+    }
+    /*当消息输入字数多时，输入框自动增长*/
+    $("#message").change(function() {
+                 var defaultLength = 10;//线的最小长度是10
+                 var length = $("#message").val().length;
+                 if(length > defaultLength)
+                   defaultLength = length;
+               $('#message').css('width', defaultLength);
+           });
+</script>
+</body>
+</html>

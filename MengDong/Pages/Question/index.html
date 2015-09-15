@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:80">
+    <title>试题管理</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/jquery-easyui-1.4.3/demo/demo.css">
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../assets/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js"></script><!-- 使用该js组件可以使easyui的页码信息和提示信息变为中文 -->
+</head>
+<body>
+    <table id="dg" title="试题信息" class="easyui-datagrid" style="width:1147px;height:552px"
+            url="http://59.173.200.101:28400/api/question/search"
+            toolbar="#toolbar" pagination="true"
+            rownumbers="true" fitColumns="true">
+        <thead>
+            <tr>
+            	<th field="ck" checkbox="true"></th>
+                <th field="questionID" width="50">试题ID</th><!-- 添加 hidden="true" 可将此列隐藏 -->
+                <th field="questionContent" width="150">试题内容</th>
+                <th field="questionResourceURL" width="50">试题资源URL</th>
+                <th field="questionFileTypeID" width="50">试题文件类型ID</th>
+                <th field="questionProfessionalTypeID" width="50">试题专业类型ID</th>
+                <th field="questionCreateTime" width="50">试题创建时间</th>
+                <th field="questionCreatorID" width="50">试题创建人ID</th>
+                <th field="questionCreatorName" width="50">试题创建人姓名</th>
+                <th field="modifyPersonID" width="50">修改人ID</th>
+                <th field="modifyPersonName" width="50">修改人姓名</th>
+                <th field="modifyTime" width="50">修改时间</th>
+                <th field="isDeleted" width="50">是否删除</th>
+                <th field="notes" width="50">备注</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newQuestion()">新建试题</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editQuestion()">编辑试题</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyQuestion()">删除试题</a>
+        <input id="searchQuestionID" class="easyui-searchbox" style="line-height:26px;border:1px solid #ccc">
+        <a href="#" id="searchBtn" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+        <input id="searchQuestionID" class="easyui-textbox" data-options="buttonText:'SEARCH',prompt:'Search...'"  onclick="doSearch()" style="width:250px;height:32px;">
+        <input id="import" type="text" class="easyui-filebox" data-options="prompt:'导入'">
+    </div>
+    
+    <!-- 新增试题对话框开始 -->
+    <div id="dlg" class="easyui-dialog" style="width:480px;height:500px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons">
+        <div class="ftitle">试题信息</div>
+        <form id="fm" method="post" novalidate>
+            <div class="fitem">
+                <label>试题ID:</label>
+                <input name="QuestionID" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem">
+                <label>试题内容:</label>
+                <input name="QuestionContent" class="easyui-textbox" required="true">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editQuestionContent()">编辑试题内容</a>
+
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveQuestion()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 新增试题对话框结束 -->
+    <!-- 编辑试题对话框开始 -->
+    <div id="dlg1" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons1">
+        <div class="ftitle1">试题信息</div>
+        <form id="fm1" method="post" novalidate>
+            <div class="fitem1">
+                <label>试题ID:</label>
+                <input id="QuestionID" name="questionID" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem1">
+                <label>试题内容:</label>
+                <input id ="QuestionContent" name="questionContent" class="easyui-textbox" required="true">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editQuestionContent1()">编辑试题内容</a>
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveEditQuestion()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg1').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 编辑试题对话框结束 -->
+    <!-- 编辑试题内容对话框开始（新建试题dialog中）-->
+    <div id="dlg_content" class="easyui-dialog" style="width:500px;height:600px;padding:10px 20px" closed="true" buttons="#dlg-buttons1">
+        <div class="ftitle1">试题内容信息</div>
+        <form id="fm_content" method="post" novalidate>
+            <div class="fitem">
+                <label>试题内容ID:</label>
+                <input id="questionContentID" name="QuestionContentID" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem">
+                <label>题干:</label>
+                <textarea id="title" name="Title" style="width:160px; height:150px;" required="true"></textarea>
+            </div>
+            <div class="fitem">
+                <label>题目类型:</label>
+                <input id="questionType" name="QuestionType" class="easyui-combotree" data-options="url:'tree_data1.json',method:'get',required:true" style="width:160px;">
+            </div>
+            <div class="fitem">
+                <label>试题资源URL:</label>
+                <input id="questionResourceURL" class="easyui-filebox" name="QuestionResourceURL" data-options="prompt:'Choose a file...'">
+            </div>
+            <div class="fitem">
+                <label>开始时间(毫秒):</label>
+                <input id="startTime" name="StartTime" class="easyui-numberspinner" value="30" style="width:80px;">
+            </div>
+            <div class="fitem">
+                <label>选项类型:</label>
+                <input id="contentType" type="radio" name="ContentType" value="文字选项" checked="true" style="width:10px;">文字选项
+                <input id="contentType" type="radio" name="ContentType" value="图片选项"  style="width:10px;">图片选项
+            </div>
+            <div class="fitem">
+                <label>选项:</label>
+                <input id="options" name="Options" class="easyui-textbox">
+            </div>
+            <div class="fitem">
+                <label>选项编号类型:</label>
+                <select id="optionsNumberType" class="easyui-combobox" name="OptionsNumberType" style="width:160px;">
+                  <option value="AL">A,B,C,...</option>
+                  <option value="AK">1,2,3,...</option>
+                </select>
+            </div>
+            <div class="fitem">
+                <label>回答正确提示:</label>
+                <input id="rightInfo" name="RightInfo" class="easyui-textbox" value="回答正确！">
+            </div>
+            <div class="fitem">
+                <label>回答错误提示:</label>
+                <input id="wrongInfo" name="WrongInfo" class="easyui-textbox" value="回答错误！">
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveEditQuestionContent()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg_content').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 编辑试题内容对话框结束（新建试题dialog中）-->
+    <!-- 编辑试题内容对话框开始（编辑试题dialog中）-->
+    <div id="dlg_content1" class="easyui-dialog" style="width:500px;height:600px;padding:10px 20px" closed="true" buttons="#dlg-buttons1">
+        <div class="ftitle1">试题内容信息</div>
+        <form id="fm_content1" method="post" novalidate>
+            <div class="fitem">
+                <label>试题内容ID:</label>
+                <input id="questionContentID1" name="QuestionContentID1" class="easyui-textbox" required="true">
+            </div>
+            <div class="fitem">
+                <label>题干:</label>
+                <textarea id="title1" name="Title1" style="width:160px; height:150px;" required="true"></textarea>
+            </div>
+            <div class="fitem">
+                <label>题目类型:</label>
+                <input id="questionType1" name="QuestionType1" class="easyui-combotree" data-options="url:'tree_data1.json',method:'get',required:true" style="width:160px;">
+            </div>
+            <div class="fitem">
+                <label>试题资源URL:</label>
+                <input id="questionResourceURL1" class="easyui-filebox" name="QuestionResourceURL1" data-options="prompt:'Choose a file...'">
+            </div>
+            <div class="fitem">
+                <label>开始时间(毫秒):</label>
+                <input id="startTime1" name="StartTime1" class="easyui-numberspinner" value="30" style="width:80px;">
+            </div>
+            <div class="fitem">
+                <label>选项类型:</label>
+                <input id="contentType1" type="radio" name="ContentType1" value="文字选项" checked="true" style="width:10px;">文字选项
+                <input id="contentType1" type="radio" name="ContentType1" value="图片选项"  style="width:10px;">图片选项
+            </div>
+            <div class="fitem">
+                <label>选项:</label>
+                <input id="options1" name="Options1" class="easyui-textbox">
+            </div>
+            <div class="fitem">
+                <label>选项编号类型:</label>
+                <select id="optionsNumberType1" class="easyui-combobox1" name="OptionsNumberType" style="width:160px;">
+                  <option value="AL">A,B,C,...</option>
+                  <option value="AK">1,2,3,...</option>
+                </select>
+            </div>
+            <div class="fitem">
+                <label>回答正确提示:</label>
+                <input id="rightInfo1" name="RightInfo1" class="easyui-textbox" value="回答正确！">
+            </div>
+            <div class="fitem">
+                <label>回答错误提示:</label>
+                <input id="wrongInfo1" name="WrongInfo1" class="easyui-textbox" value="回答错误！">
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons1">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveEditQuestionContent()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg_content1').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 编辑试题内容对话框结束（编辑试题dialog中）-->
+    <script type="text/javascript">
+        var url;
+        var editQuestionContentRow;
+        function newQuestion(){
+            $('#dlg').dialog('open').dialog('setTitle','新建试题');
+            $('#fm').form('clear');
+        }
+        function editQuestion(){
+            var row = $('#dg').datagrid('getSelected');
+                console.log(row);
+            editQuestionContentRow = row;
+            if (row){
+                $('#dlg1').dialog('open').dialog('setTitle','编辑试题');
+                $('#fm1').form('load',row);
+            }
+        }
+        function saveQuestion(){
+            oData = {};
+            oData['questionID'] = $("input[name = 'QuestionID']").val();
+            oData['questionContent'] = $("input[name = 'QuestionContent']").val();
+            oData['questionFileTypeID'] = 1;
+            oData['questionProfessionalTypeID'] = 1;
+            oData['questionCreatorID'] = 1;
+            oData['questionCreatorName'] = 'admin';
+            oData['modifyPersonID'] = 1;
+            oData['modifyPersonName'] = 'admin';
+            oData['isDeleted'] = false;
+
+            console.log(oData);
+
+            $.ajax({
+                url: 'http://localhost:8000/httpPostQuestion.php',
+                type: 'post',
+                data: oData
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+            $('#dlg').dialog('close');
+            $('#dg').datagrid('reload');
+        }
+
+        function saveEditQuestion(){
+            oData = {};
+            oData['questionID'] = $("#QuestionID").val();
+            oData['questionContent'] = $("#QuestionContent").val();
+            oData['questionFileTypeID'] = 1;
+            oData['questionProfessionalTypeID'] = 1;
+            oData['questionCreatorID'] = 1;
+            oData['questionCreatorName'] = 'admin';
+            oData['modifyPersonID'] = 1;
+            oData['modifyPersonName'] = 'admin';
+            oData['isDeleted'] = false;
+
+            $.ajax({
+                url: 'http://localhost:8000/httpPutQuestion.php',
+                type: 'post',
+                data: oData
+            })
+            .done(function(data) {
+                console.log("success");
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+            $('#dlg1').dialog('close');
+            $('#dg').datagrid('reload');
+        }
+
+        function destroyQuestion(){
+            var rows = $('#dg').datagrid('getSelections');
+            if (rows.length == 0) {
+                $.messager.alert("提示","请选择要删除的行！","info");
+                return;
+            }
+            else {
+                $.messager.confirm('提示','你确定要删除选中的试题？',function(r){
+                    if (r){
+                        for (var i = rows.length - 1; i >= 0; i--) {
+                            var row = rows[i];
+                            if (row){
+                                oData = {};
+                                oData['questionID'] = row.questionID;
+
+                                $.ajax({
+                                 url: 'http://localhost:8000/httpDeleteQuestion.php',
+                                 type: 'post',
+                                 data: oData
+                                })
+
+                                .done(function(data) {
+                                    console.log("success");
+                                    console.log(data);
+                                    $('#dg').datagrid('reload');
+                                })
+                                .fail(function() {
+                                    console.log("error");
+                                })
+                                .always(function() {
+                                    console.log("complete");
+                                });
+
+                            }
+                        }
+                    }
+                });
+            }
+            $('#dg').datagrid('reload');
+        }
+
+
+        function editQuestionContent(){
+            $('#dlg_content').dialog('open').dialog('setTitle','编辑试题内容');
+            $('#fm_content').form('clear');
+
+            $("#rightInfo").val("回答正确！");//给回答正确和回答错误提示设置默认值
+            $("#rightInfo").val("回答错误！");
+        }
+
+        function editQuestionContent1(){
+            $('#dlg_content1').dialog('open').dialog('setTitle','编辑试题内容');
+            $('#fm_content1').form('clear');
+
+            console.log(editQuestionContentRow.questionContent);
+
+            var afterjson = eval( '(' + editQuestionContentRow.questionContent + ')' );
+            console.log(afterjson);
+            $.each(afterjson, function(i, item) {
+                console.log(item.ID);
+                $("input[name = 'QuestionContentID1']").val(item.ID);
+                //$("#questionContentID1").val(item.ID);
+                //$('#fm_content1').form('load',item);
+            });
+            //$("#questioncontentID").val(afterjson["ID"]);
+            //$('#fm_content1').form('load',editQuestionContentRow);
+        }
+
+        function saveEditQuestionContent(){
+            oData = {};
+            oData["QuestionContentID"] = $("#questioncontentID").val();
+            oData["Title"] = $("#title").val();
+            oData["QuestionType"] = $("#questionType").val();
+            oData["QuestionResourceURL"] = $("#questionResourceURL").val();
+            oData["StartTime"] = $("#startTime").val();
+            oData["ContentType"] = $("#contentType").val();
+            oData["Options"] = $("#options").val();
+            oData["OptionsNumberType"] = $("#optionsNumberType").val();
+            oData["RightInfo"] = $("#rightInfo").val();
+            oData["WrongInfo"] = $("#WrongInfo").val();
+
+            $("input[name = 'QuestionContent']").val(JSON.stringify(oData));
+            //console.log($("input[name = 'QuestionContent']").val());
+
+            $('#dlg_content').dialog('close');
+        }
+
+        function doSearch(){
+            url = 'http://111.172.171.216:28400/api/question/'+$('#searchQuestionID').val()
+			$('#dg').datagrid('load',url);
+		}
+
+		$('#dg').datagrid({
+				method:'get',
+                striped:true,
+                rownumbers:true,
+                pageNumber:1,
+                pageSize:5,
+                pageList:[5,10,15],
+                pagination:true
+            })
+    </script>
+    <style type="text/css">
+        #fm{
+            margin:0;
+            padding:10px 30px;
+        }
+        .ftitle{
+            font-size:14px;
+            font-weight:bold;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+        .fitem{
+            margin-bottom:5px;
+        }
+        .fitem label{
+            display:inline-block;
+            width:90px;
+        }
+        .fitem input{
+            width:160px;
+        }
+
+        #fm1{
+            margin:0;
+            padding:10px 30px;
+        }
+        .ftitle1{
+            font-size:14px;
+            font-weight:bold;
+            padding:5px 0;
+            margin-bottom:10px;
+            border-bottom:1px solid #ccc;
+        }
+        .fitem1{
+            margin-bottom:5px;
+        }
+        .fitem1 label{
+            display:inline-block;
+            width:80px;
+        }
+        .fitem1 input{
+            width:160px;
+        }
+    </style>
+</body>
+</html>
